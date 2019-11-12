@@ -30,6 +30,7 @@ def admin(con, cur):
 		print("21. State_Country Table")
 		print("22. Logout")
 		ch = int(input("Enter choice> "))
+		tmp = sp.call('clear',shell=True)
 		if ch == 1:
 			passenger(con, cur)
 		elif ch == 2:
@@ -50,28 +51,28 @@ def admin(con, cur):
 			department(con, cur)
 		elif ch == 10:
 			employee(con, cur)
-		# elif ch == 11:
-		# 	security(con, cur)
-		# elif ch == 12:
-		# 	driver(con, cur)
-		# elif ch == 13:
-		# 	otherStaff(con, cur)
-		# elif ch == 14:
-		# 	employeeDependent(con, cur)
-		# elif ch == 15:
-		# 	passPNo(con, cur)
-		# elif ch == 16:
-		# 	passEmail(con, cur)
-		# elif ch == 17:
-		# 	empPNo(con, cur)
-		# elif ch == 18:
-		# 	empEmail(con, cur)
-		# elif ch == 19:
-		# 	empDepPNo(con, cur)
-		# elif ch == 20:
-		# 	empDepEmail(con, cur)
-		# elif ch == 21:
-		# 	stateCountry(con, cur)
+		elif ch == 11:
+			security(con, cur)
+		elif ch == 12:
+			driver(con, cur)
+		elif ch == 13:
+			otherStaff(con, cur)
+		elif ch == 14:
+			employeeDependent(con, cur)
+		elif ch == 15:
+			passPNo(con, cur)
+		elif ch == 16:
+			passEmail(con, cur)
+		elif ch == 17:
+			empPNo(con, cur)
+		elif ch == 18:
+			empEmail(con, cur)
+		elif ch == 19:
+			empDepPNo(con, cur)
+		elif ch == 20:
+			empDepEmail(con, cur)
+		elif ch == 21:
+			stateCountry(con, cur)
 		elif ch == 22:
 			return 1
 		else:
@@ -100,6 +101,8 @@ def login(con, cur):
 		if row == None:
 			print("You are not registered.")
 			return
+		tmp = sp.call('clear',shell=True)
+		print("You are logged in.\n")
 		user(info["ID"], con, cur)
 	except Exception as er:
 		print(er)
@@ -123,7 +126,26 @@ def register(con, cur):
 		query = "INSERT INTO Passenger(Passenger_ID, First_Name, Middle_Name, Last_Name, DOB, Gender, Address, PinCode, State) VALUES('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s')" %(info["ID"], info["Fname"], info["Mname"], info["Lname"], info["DOB"], info["Gender"], info["Address"], info["Pin Code"], info["State"]);
 		cur.execute(query)
 		con.commit()
-		print("Successfully Registered\n")
+		info["PNo1"] = input("Phone Number1 : ")
+		info["PNo2"] = input("Phone Number2 : ")
+		info["E1"] = input("Email ID1 : ")
+		info["E2"] = input("Email ID2 : ")
+		query = "INSERT INTO Passenger_PhoneNumber(Passenger_ID, PhoneNumber) VALUES('%d', '%s')" %(info["ID"], info["PNo1"]);
+		cur.execute(query)
+		con.commit()
+		query = "INSERT INTO Passenger_EmailID(Passenger_ID, EmailID) VALUES('%d', '%s')" %(info["ID"], info["E1"]);
+		cur.execute(query)
+		con.commit()
+		if info["PNo2"] != "":
+			query = "INSERT INTO Passenger_PhoneNumber(Passenger_ID, PhoneNumber) VALUES('%d', '%s')" %(info["ID"], info["PNo2"]);
+			cur.execute(query)
+			con.commit()
+		if info["E2"] != "":
+			query = "INSERT INTO Passenger_EmailID(Passenger_ID, EmailID) VALUES('%d', '%s')" %(info["ID"], info["E2"]);
+			cur.execute(query)
+			con.commit()
+		tmp = sp.call('clear',shell=True)
+		print("\nSuccessfully Registered. You are logged in.\n")
 		user(info["ID"], con, cur)
 	except Exception as er:
 		con.rollback()
@@ -135,13 +157,13 @@ if __name__ == '__main__':
 	run = 1
 	while(run):
 		tmp = sp.call('clear',shell=True)
-		username = input("Username: ")
-		password = input("Password: ")
+		# username = input("Username: ")
+		# password = input("Password: ")
 		
 		try:
 			con = pymysql.connect(host='localhost',
-					user=username,
-					password=password,
+					user='user',
+					password='password',
 					db='SHIP_MANAGEMENT_SYSTEM',
 					cursorclass=pymysql.cursors.DictCursor)
 			tmp = sp.call('clear',shell=True)
@@ -174,6 +196,7 @@ if __name__ == '__main__':
 							tmp = input("Enter the password to CONTINUE> ")
 							sp.call('clear',shell=True)
 							if tmp == 'admin':
+								print("Successfully logged in\n.")
 								admin(con, cur)
 								break
 							else:

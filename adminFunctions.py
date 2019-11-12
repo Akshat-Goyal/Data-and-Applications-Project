@@ -120,7 +120,7 @@ def port(con, cur):
 				info["Name"] = input("Port Name : ")	
 				info["Capacity"] = int(input("Port Capacity (Ships): "))
 
-				query = "INSERT INTO Port(Port_ID, PortName, PortCapacity(Ships)) VALUES('%d', '%s', '%d')" %(info["ID"], info["Name"], info["Capacity"]);
+				query = "INSERT INTO Port(Port_ID, PortName, `PortCapacity(Ships)`) VALUES('%d', '%s', '%d')" %(info["ID"], info["Name"], info["Capacity"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -145,7 +145,7 @@ def port(con, cur):
 				info["Capacity"] = input("Port Capacity (Ships): ")
 				if info["Capacity"] != "":
 					row["PortCapacity(Ships)"] = int(info["Capacity"])
-				query = "UPDATE Port SET Port_ID = '%d', PortName = '%s', PortCapacity(Ships) = '%d' WHERE Port_ID = '%d'" %(row["Port_ID"], row["PortName"], row["PortCapacity(Ships)"], ID);
+				query = "UPDATE Port SET Port_ID = '%d', PortName = '%s', `PortCapacity(Ships)` = '%d' WHERE Port_ID = '%d'" %(row["Port_ID"], row["PortName"], row["PortCapacity(Ships)"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")
@@ -285,7 +285,7 @@ def cargoShip(con, cur):
 				info["ID"] = int(input("Ship_ID: "))
 				info["Capacity"] = float(input("Capacity (TEU) : "))
 				info["Cost"] = float(input("Cost (Rupees per TEU) : "))
-				query = "INSERT INTO CargoShip(Ship_ID, Capacity(TEU), Cost(Rupees per TEU)) VALUES('%d', '%f', '%f')" %(info["ID"], info["Capacity"], info["Cost"]);
+				query = "INSERT INTO CargoShip(Ship_ID, `Capacity(TEU)`, `Cost(Rupees per TEU)`) VALUES('%d', '%f', '%f')" %(info["ID"], info["Capacity"], info["Cost"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -310,7 +310,7 @@ def cargoShip(con, cur):
 				info["Cost"] = input("Cost (Rupees per TEU) : ")
 				if info["Cost"] != "":
 					row["Cost(Rupees per TEU)"] = float(info["Cost"])
-				query = "UPDATE CargoShip SET Ship_ID = '%d', Capacity(TEU) = '%f', Cost(Rupees per TEU) = '%f' WHERE Ship_ID = '%d'" %(row["Ship_ID"], row["Capacity(TEU)"], row["Cost(Rupees per TEU)"], ID);
+				query = "UPDATE CargoShip SET Ship_ID = '%d', `Capacity(TEU)` = '%f', `Cost(Rupees per TEU)` = '%f' WHERE Ship_ID = '%d'" %(row["Ship_ID"], row["Capacity(TEU)"], row["Cost(Rupees per TEU)"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")
@@ -362,7 +362,7 @@ def passengerShip(con, cur):
 				info["ID"] = int(input("Ship_ID: "))
 				info["Capacity"] = float(input("Capacity (TEU) : "))
 				info["Facilities"] = input("Facilities : ")
-				query = "INSERT INTO PassengerShip(Ship_ID, Capacity(TEU), Facilities) VALUES('%d', '%f', '%s')" %(info["ID"], info["Capacity"], info["Facilities"]);
+				query = "INSERT INTO PassengerShip(Ship_ID, `Capacity(TEU)`, Facilities) VALUES('%d', '%f', '%s')" %(info["ID"], info["Capacity"], info["Facilities"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -387,7 +387,7 @@ def passengerShip(con, cur):
 				info["Facilities"] = input("Facilities : ")
 				if info["Facilities"] != "":
 					row["Facilities"] = info["Facilities"]
-				query = "UPDATE PassengerShip SET Ship_ID = '%d', Capacity(TEU) = '%f', Facilities = '%s' WHERE Ship_ID = '%d'" %(row["Ship_ID"], row["Capacity(TEU)"], row["Facilities"], ID);
+				query = "UPDATE PassengerShip SET Ship_ID = '%d', `Capacity(TEU)` = '%f', Facilities = '%s' WHERE Ship_ID = '%d'" %(row["Ship_ID"], row["Capacity(TEU)"], row["Facilities"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")
@@ -871,7 +871,7 @@ def security(con, cur):
 				info["Exp"] = int(input("Experience (Years) : "))
 				info["SID"] = int(input("Ship_ID : "))
 				info["SC"] = input("Security Company : ")
-				query = "INSERT INTO Security(Employee_ID, Experience(Years), Ship_ID, SecurityCompany) VALUES('%d', '%d', '%d', '%s')" %(info["ID"], info["Exp"], info["SID"], info["SC"]);
+				query = "INSERT INTO Security(Employee_ID, `Experience(Years)`, Ship_ID, SecurityCompany) VALUES('%d', '%d', '%d', '%s')" %(info["ID"], info["Exp"], info["SID"], info["SC"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -899,7 +899,7 @@ def security(con, cur):
 				info["SC"] = input("Security Company: ")
 				if info["SC"] != "":
 					row["SecurityCompany"] = info["SC"]
-				query = "UPDATE Security SET Employee_ID = '%d', Experience(Years) = '%d', Ship_ID = '%d', SecurityCompany = '%s' WHERE Employee_ID = '%d'" %(row["Employee_ID"], row["Experience(Years)"], row["Ship_ID"], row["SecurityCompany"], ID);
+				query = "UPDATE Security SET Employee_ID = '%d', `Experience(Years)` = '%d', Ship_ID = '%d', SecurityCompany = '%s' WHERE Employee_ID = '%d'" %(row["Employee_ID"], row["Experience(Years)"], row["Ship_ID"], row["SecurityCompany"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")
@@ -952,7 +952,7 @@ def driver(con, cur):
 				info["Exp"] = int(input("Experience (Years) : "))
 				info["SID"] = int(input("Ship_ID : "))
 				info["LID"] = int(input("Driving License ID : "))
-				query = "INSERT INTO Drivers(Employee_ID, Experience(Years), Ship_ID, DrivingLicenseID) VALUES('%d', '%d', '%d', '%d')" %(info["ID"], info["Exp"], info["SID"], info["LID"]);
+				query = "INSERT INTO Drivers(Employee_ID, `Experience(Years)`, Ship_ID, DrivingLicenseID) VALUES('%d', '%d', '%d', '%d')" %(info["ID"], info["Exp"], info["SID"], info["LID"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -980,7 +980,7 @@ def driver(con, cur):
 				info["LID"] = input("Driving License ID: ")
 				if info["LID"] != "":
 					row["DrivingLicenseID"] = int(info["LID"])
-				query = "UPDATE Drivers SET Employee_ID = '%d', Experience(Years) = '%d', Ship_ID = '%d', DrivingLicenseID = '%d' WHERE Employee_ID = '%d'" %(row["Employee_ID"], row["Experience(Years)"], row["Ship_ID"], row["DrivingLicenseID"], ID);
+				query = "UPDATE Drivers SET Employee_ID = '%d', `Experience(Years)` = '%d', Ship_ID = '%d', DrivingLicenseID = '%d' WHERE Employee_ID = '%d'" %(row["Employee_ID"], row["Experience(Years)"], row["Ship_ID"], row["DrivingLicenseID"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")
@@ -1031,7 +1031,7 @@ def otherStaff(con, cur):
 				info = {}
 				info["ID"] = int(input("Employee_ID : "))
 				info["Exp"] = int(input("Experience (Years) : "))
-				query = "INSERT INTO OtherStaff(Employee_ID, Experience(Years)) VALUES('%d', '%d')" %(info["ID"], info["Exp"]);
+				query = "INSERT INTO OtherStaff(Employee_ID, `Experience(Years)`) VALUES('%d', '%d')" %(info["ID"], info["Exp"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -1053,7 +1053,7 @@ def otherStaff(con, cur):
 				info["Exp"] = input("Experience (Years): ")
 				if info["Exp"] != "":
 					row["Experience(Years)"] = int(info["Exp"])
-				query = "UPDATE OtherStaff SET Employee_ID = '%d', Experience(Years) = '%d' WHERE Employee_ID = '%d'" %(row["Employee_ID"], row["Experience(Years)"], ID);
+				query = "UPDATE OtherStaff SET Employee_ID = '%d', `Experience(Years)` = '%d' WHERE Employee_ID = '%d'" %(row["Employee_ID"], row["Experience(Years)"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")

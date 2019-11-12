@@ -11,7 +11,7 @@ create table State_Country(
 
 drop table if exists Passenger;
 create table Passenger(
-    Passenger_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Passenger_ID INT UNSIGNED NOT NULL ,
     First_Name VARCHAR(15) NOT NULL,
     Middle_Name VARCHAR(15),
     Last_Name VARCHAR(15) NOT NULL,
@@ -22,24 +22,24 @@ create table Passenger(
     State VARCHAR(30) NOT NULL,
     PRIMARY KEY (Passenger_ID),
     FOREIGN KEY (State) REFERENCES State_Country(State) ON DELETE CASCADE,
-    CONSTRAINT Passenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7),
-    CONSTRAINT PinCode CHECK(LENGTH(CONVERT(PinCode, CHAR)) = 6),
-    CONSTRAINT Gender CHECK(Gender = 'Male' OR Gender = 'Female' OR Gender = 'Others')
+    CONSTRAINT aPassenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7),
+    CONSTRAINT aPinCode CHECK(LENGTH(CONVERT(PinCode, CHAR)) = 6),
+    CONSTRAINT aGender CHECK(Gender = 'Male' OR Gender = 'Female' OR Gender = 'Others')
 );
 
 drop table if exists Port;
 create table Port(
-    Port_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Port_ID INT UNSIGNED NOT NULL  ,
     PortName VARCHAR(30) NOT  NULL,
     `PortCapacity(Ships)` INT UNSIGNED NOT NULL,
     PRIMARY KEY (Port_ID),
-    CONSTRAINT Port_ID CHECK(LENGTH(CONVERT(Port_ID, CHAR)) = 5),
-    CONSTRAINT `PortCapacity(Ships)` CHECK(`PortCapacity(Ships)` <= 200)
+    CONSTRAINT bPort_ID CHECK(LENGTH(CONVERT(Port_ID, CHAR)) = 5),
+    CONSTRAINT `bPortCapacity(Ships)` CHECK(`PortCapacity(Ships)` <= 200)
 );
 
 drop table if exists Ship;
 create table Ship(
-    Ship_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Ship_ID INT UNSIGNED NOT NULL  ,
     ShipName VARCHAR(30) NOT  NULL,
     ShipType VARCHAR(30) NOT NULL,
     Last_Service_Date DATE NOT NULL,
@@ -48,9 +48,9 @@ create table Ship(
     PRIMARY KEY (Ship_ID),
     FOREIGN KEY (SourcePort_ID) REFERENCES Port(Port_ID) ON DELETE CASCADE,
     FOREIGN KEY (DestinationPort_ID) REFERENCES Port(Port_ID) ON DELETE CASCADE,
-    CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5),
-    CONSTRAINT SourcePort_ID CHECK(LENGTH(CONVERT(SourcePort_ID, CHAR)) = 5),
-    CONSTRAINT DestinationPort_ID CHECK(LENGTH(CONVERT(DestinationPort_ID, CHAR)) = 5)
+    CONSTRAINT cShip_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5),
+    CONSTRAINT cSourcePort_ID CHECK(LENGTH(CONVERT(SourcePort_ID, CHAR)) = 5),
+    CONSTRAINT cDestinationPort_ID CHECK(LENGTH(CONVERT(DestinationPort_ID, CHAR)) = 5)
 );
 
 drop table if exists CargoShip;
@@ -60,9 +60,9 @@ create table CargoShip(
     `Cost(Rupees per TEU)` FLOAT NOT NULL,
     PRIMARY KEY (Ship_ID),
     FOREIGN KEY (Ship_ID) REFERENCES Ship(Ship_ID) ON DELETE CASCADE,
-    CONSTRAINT `Capacity(TEU)` CHECK(`Capacity(TEU)` > 0 AND `Capacity(TEU)` <= 21413),
-    CONSTRAINT `Cost(Rupees per TEU)` CHECK(`Cost(Rupees per TEU)` > 0), 
-    CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
+    CONSTRAINT `dCapacity(TEU)` CHECK(`Capacity(TEU)` > 0 AND `Capacity(TEU)` <= 21413),
+    CONSTRAINT `dCost(Rupees per TEU)` CHECK(`Cost(Rupees per TEU)` > 0), 
+    CONSTRAINT dCargoShip_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
 );
 
 drop table if exists PassengerShip;
@@ -72,16 +72,16 @@ create table PassengerShip(
     Facilities VARCHAR(128),
     PRIMARY KEY (Ship_ID),
     FOREIGN KEY (Ship_ID) REFERENCES Ship(Ship_ID) ON DELETE CASCADE,
-    CONSTRAINT `Capacity(Passenger)` CHECK(`Capacity(Passenger)` <= 500),
-    CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
+    CONSTRAINT `eCapacity(Passenger)` CHECK(`Capacity(Passenger)` <= 500),
+    CONSTRAINT eShip_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
 );
 
 drop table if exists BookingAgent;
 create table BookingAgent(
-    Agent_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Agent_ID INT UNSIGNED NOT NULL  ,
     AgentName VARCHAR(45) NOT NULL,
     PRIMARY KEY (Agent_ID),
-    CONSTRAINT Agent_ID CHECK(LENGTH(CONVERT(Agent_ID, CHAR)) = 7)
+    CONSTRAINT fAgent_ID CHECK(LENGTH(CONVERT(Agent_ID, CHAR)) = 7)
 );
 
 SET sql_mode = '';
@@ -95,13 +95,13 @@ create table Route(
     PRIMARY KEY (DepartureTime, Ship_ID),
     FOREIGN KEY (Ship_Id) REFERENCES Ship(Ship_ID) ON DELETE CASCADE,
     FOREIGN KEY (Port_Id) REFERENCES Port(Port_ID) ON DELETE CASCADE,
-    CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5),
-    CONSTRAINT Port_ID CHECK(LENGTH(CONVERT(Port_ID, CHAR)) = 5)
+    CONSTRAINT gRouteShip_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5),
+    CONSTRAINT gPort_ID CHECK(LENGTH(CONVERT(Port_ID, CHAR)) = 5)
 );
 
 drop table if exists Ticket;
 create table Ticket(
-    Ticket_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Ticket_ID INT UNSIGNED NOT NULL  ,
     Ship_ID INT UNSIGNED NOT NULL,
     SourcePort_ID INT UNSIGNED NOT NULL,
     DestinationPort_ID INT UNSIGNED NOT NULL,
@@ -116,28 +116,28 @@ create table Ticket(
     FOREIGN KEY (DestinationPort_Id) REFERENCES Port(Port_ID) ON DELETE CASCADE,
     FOREIGN KEY (Passenger_Id) REFERENCES Passenger(Passenger_ID) ON DELETE CASCADE,
     FOREIGN KEY (Agent_Id) REFERENCES BookingAgent(Agent_ID) ON DELETE CASCADE,
-    CONSTRAINT Ticket_ID CHECK(LENGTH(CONVERT(Ticket_ID, CHAR)) = 7),
-    CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5),
-    CONSTRAINT SourcePort_ID CHECK(LENGTH(CONVERT(SourcePort_ID, CHAR)) = 5),
-    CONSTRAINT DestinationPort_ID CHECK(LENGTH(CONVERT(DestinationPort_ID, CHAR)) = 5),
-    CONSTRAINT Passenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7),
-    CONSTRAINT Agent_ID CHECK(LENGTH(CONVERT(Agent_ID, CHAR)) = 7),
-    CONSTRAINT SeatNo CHECK(SeatNo <= 2000)
+    CONSTRAINT hTicket_ID CHECK(LENGTH(CONVERT(Ticket_ID, CHAR)) = 7),
+    CONSTRAINT hTicketShip_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5),
+    CONSTRAINT hSourcePort_ID CHECK(LENGTH(CONVERT(SourcePort_ID, CHAR)) = 5),
+    CONSTRAINT hDestinationPort_ID CHECK(LENGTH(CONVERT(DestinationPort_ID, CHAR)) = 5),
+    CONSTRAINT hPassenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7),
+    CONSTRAINT hAgent_ID CHECK(LENGTH(CONVERT(Agent_ID, CHAR)) = 7),
+    CONSTRAINT hSeatNo CHECK(SeatNo <= 2000)
 );
 
 drop table if exists Department;
 create table Department(
-    Department_Id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Department_Id INT UNSIGNED NOT NULL  ,
     DepartmentName VARCHAR(30) NOT NULL,
     NumberOfEmployees INT UNSIGNED NOT NULL,
     PRIMARY KEY (Department_ID),
-    CONSTRAINT Department_ID CHECK(LENGTH(CONVERT(Department_ID, CHAR)) = 4),
-    CONSTRAINT NumberOfEmployees CHECK(NumberOfEmployees <= 200)
+    CONSTRAINT iDepartment_ID CHECK(LENGTH(CONVERT(Department_ID, CHAR)) = 4),
+    CONSTRAINT iNumberOfEmployees CHECK(NumberOfEmployees <= 200)
 );
 
 drop table if exists Employee;
 create table Employee(
-    Employee_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Employee_ID INT UNSIGNED NOT NULL  ,
     First_Name VARCHAR(15) NOT NULL,
     Middle_Name VARCHAR(15),
     Last_Name VARCHAR(15) NOT NULL,
@@ -151,10 +151,10 @@ create table Employee(
     PRIMARY KEY (Employee_ID),
     FOREIGN KEY (Department_ID) REFERENCES Department(Department_ID) ON DELETE CASCADE,
     FOREIGN KEY (State) REFERENCES State_Country(State) ON DELETE CASCADE,
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
-    CONSTRAINT Department_ID CHECK(LENGTH(CONVERT(Department_ID, CHAR)) = 4),
-    CONSTRAINT PinCode CHECK(LENGTH(CONVERT(PinCode, CHAR)) = 6),
-    CONSTRAINT Gender CHECK(Gender = 'Male' OR Gender = 'Female' OR Gender = 'Others')
+    CONSTRAINT jEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
+    CONSTRAINT jDepartment_ID CHECK(LENGTH(CONVERT(Department_ID, CHAR)) = 4),
+    CONSTRAINT jPinCode CHECK(LENGTH(CONVERT(PinCode, CHAR)) = 6),
+    CONSTRAINT jGender CHECK(Gender = 'Male' OR Gender = 'Female' OR Gender = 'Others')
 );
 
 drop table if exists Security;
@@ -166,9 +166,9 @@ create table Security(
     PRIMARY KEY (Employee_ID),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
     FOREIGN KEY (Ship_ID) REFERENCES Ship(Ship_ID) ON DELETE CASCADE,
-    CONSTRAINT `Experience(Years)` CHECK(`Experience(Years)` <= 30),
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
-    CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
+    CONSTRAINT `kExperience(Years)` CHECK(`Experience(Years)` <= 30),
+    CONSTRAINT kEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
+    CONSTRAINT kSecurityShip_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
 );
 
 drop table if exists Drivers;
@@ -181,9 +181,9 @@ create table Drivers(
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
     FOREIGN KEY (Ship_ID) REFERENCES Ship(Ship_ID) ON DELETE CASCADE,
     CONSTRAINT `Experience(Years)` CHECK(`Experience(Years)` <= 30),
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
-    CONSTRAINT DrivingLicenseID CHECK(LENGTH(CONVERT(DrivingLicenseID, CHAR)) = 7),
-    CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
+    CONSTRAINT lEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
+    CONSTRAINT lDrivingLicenseID CHECK(LENGTH(CONVERT(DrivingLicenseID, CHAR)) = 7),
+    CONSTRAINT lDriverShip_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
 );
 
 drop table if exists OtherStaff;
@@ -192,8 +192,8 @@ create table OtherStaff(
     `Experience(Years)` INT UNSIGNED NOT NULL,
     PRIMARY KEY (Employee_ID),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
-    CONSTRAINT `Experience(Years)` CHECK(`Experience(Years)` <= 30),
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
+    CONSTRAINT `mExperience(Years)` CHECK(`Experience(Years)` <= 30),
+    CONSTRAINT mEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
 
 drop table if exists Employee_Dependent;
@@ -207,8 +207,8 @@ create table Employee_Dependent(
     DependentNo INT UNSIGNED NOT NULL,
     PRIMARY KEY (Employee_ID, DependentNo),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
-    CONSTRAINT Gender CHECK(Gender = 'Male' OR Gender = 'Female' OR Gender = 'Others')
+    CONSTRAINT nEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7),
+    CONSTRAINT nGender CHECK(Gender = 'Male' OR Gender = 'Female' OR Gender = 'Others')
 );
 
 drop table if exists Passenger_PhoneNumber;
@@ -217,8 +217,8 @@ create table Passenger_PhoneNumber(
     PhoneNumber VARCHAR(20) NOT NULL,
     PRIMARY KEY (PhoneNumber),
     FOREIGN KEY (Passenger_ID) REFERENCES Passenger(Passenger_ID) ON DELETE CASCADE,
-    CONSTRAINT PhoneNumber CHECK(LENGHT(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
-    CONSTRAINT Passenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7)
+    CONSTRAINT oPhoneNumber CHECK(LENGTH(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
+    CONSTRAINT oPassenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7)
 );
 
 drop table if exists Passenger_EmailID;
@@ -227,8 +227,8 @@ create table Passenger_EmailID(
     EmailID VARCHAR(320) NOT NULL,
     PRIMARY KEY (EmailID),
     FOREIGN KEY (Passenger_ID) REFERENCES Passenger(Passenger_ID) ON DELETE CASCADE,
-    CONSTRAINT EmailID CHECK(EmailID LIKE '_%[@]_%[.]_%')
-    CONSTRAINT Passenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7)
+    CONSTRAINT pEmailID CHECK(EmailID LIKE '%@%.%'),
+    CONSTRAINT pPassenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7)
 );
 
 drop table if exists Employee_PhoneNumber;
@@ -237,8 +237,8 @@ create table Employee_PhoneNumber(
     PhoneNumber VARCHAR(20) NOT NULL,
     PRIMARY KEY (PhoneNumber),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
-    CONSTRAINT PhoneNumber CHECK(LENGHT(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
+    CONSTRAINT qPhoneNumber CHECK(LENGTH(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
+    CONSTRAINT qEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
 
 drop table if exists Employee_EmailID;
@@ -247,8 +247,8 @@ create table Employee_EmailID(
     EmailID VARCHAR(320) NOT NULL,
     PRIMARY KEY (EmailID),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
-    CONSTRAINT EmailID CHECK(EmailID LIKE '_%[@]_%[.]_%')
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
+    CONSTRAINT rEmailID CHECK(EmailID LIKE '%@%.%'),
+    CONSTRAINT rEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
 
 drop table if exists EmployeeDependent_PNo;
@@ -258,8 +258,8 @@ create table EmployeeDependent_PNo(
     PhoneNumber VARCHAR(20) NOT NULL,
     PRIMARY KEY (PhoneNumber),
     FOREIGN KEY (Employee_ID, DependentNo) REFERENCES Employee_Dependent(Employee_ID, DependentNo) ON DELETE CASCADE,
-    CONSTRAINT PhoneNumber CHECK(LENGHT(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
+    CONSTRAINT sPhoneNumber CHECK(LENGTH(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
+    CONSTRAINT sEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
 
 drop table if exists EmployeeDependent_EmailID;
@@ -269,6 +269,8 @@ create table EmployeeDependent_EmailID(
     EmailID VARCHAR(320) NOT NULL,
     PRIMARY KEY (EmailID),
     FOREIGN KEY (Employee_ID, DependentNo) REFERENCES Employee_Dependent(Employee_ID, DependentNo) ON DELETE CASCADE,
-    CONSTRAINT EmailID CHECK(EmailID LIKE '_%[@]_%[.]_%')
-    CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
+    CONSTRAINT tEmailID CHECK(EmailID LIKE '%@%.%'),
+    CONSTRAINT tEmployee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
+
+INSERT INTO State_Country(State, Country) VALUES('asd', 'asd')

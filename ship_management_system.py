@@ -32,7 +32,8 @@ def admin(con, cur):
 		print("21. State_Country Table")
 		print("22. Check Ship Status")
 		print("23. Check Cargo Trade Report")
-		print("24. Logout")
+		print("24. Drop Table")
+		print("25. Logout")
 		ch = int(input("Enter choice> "))
 		tmp = sp.call('clear',shell=True)
 		if ch == 1:
@@ -84,6 +85,8 @@ def admin(con, cur):
 			cargoTradeStatus(con, cur)
 			input("Press ENTER to CONTINUE>")
 		elif ch == 24:
+			dropTable(con, cur)
+		elif ch == 25:
 			return 1
 		else:
 			print("Please choose the correct option")
@@ -144,9 +147,9 @@ def register(con, cur):
 		cur.execute(query)
 		con.commit()
 		info["PNo1"] = input("Phone Number1 : ")
-		info["PNo2"] = input("Phone Number2 : ")
+		info["PNo2"] = input("Phone Number2 (Optional): ")
 		info["E1"] = input("Email ID1 : ")
-		info["E2"] = input("Email ID2 : ")
+		info["E2"] = input("Email ID2 (Optional) : ")
 		query = "INSERT INTO Passenger_PhoneNumber(Passenger_ID, PhoneNumber) VALUES('%d', '%s')" %(info["ID"], info["PNo1"]);
 		cur.execute(query)
 		con.commit()

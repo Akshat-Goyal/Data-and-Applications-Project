@@ -1769,10 +1769,20 @@ def shipStatus(con, cur):
 
 def cargoTradeStatus(con, cur):
 	try:
-		query = "SELECT SUM(`Capacity(TEU)`), SUM(`Cost(Rupees per TEU)`), S.SourcePort_ID, S.DestinationPort_ID FROM Ship S INNER JOIN CargoShip C ON S.Ship_ID=C.Ship_ID GROUP BY S.SourcePort_ID, S.DestinationPort_ID;"
+		query = "SELECT SUM(`Cost(Rupees per TEU)`)/SUM(`Capacity(TEU)`) AS `RS/TEU`, S.SourcePort_ID, S.DestinationPort_ID FROM Ship S INNER JOIN CargoShip C ON S.Ship_ID=C.Ship_ID GROUP BY S.SourcePort_ID, S.DestinationPort_ID;"
 		cur.execute(query)
 		rows = cur.fetchall()
 		for row in rows:
 			print(row)
 	except Exception as er:
 		print(">>>>>>>", er)
+
+
+def dropTable(con, cur):
+	try:
+		name = input("Enter Table name to be dropped: ")
+		query = "DROP TABLE '%s'" %(name);
+		cur.execute(query)
+		con.commit()
+	except Exception as er:
+		print(">>>>>>", er)

@@ -1,3 +1,4 @@
+import datetime
 
 def passenger(con, cur):
 	while(True):
@@ -119,7 +120,6 @@ def port(con, cur):
 				info["ID"] = int(input("Port_ID: "))
 				info["Name"] = input("Port Name : ")	
 				info["Capacity"] = int(input("Port Capacity (Ships): "))
-
 				query = "INSERT INTO Port(Port_ID, PortName, `PortCapacity(Ships)`) VALUES('%d', '%s', '%d')" %(info["ID"], info["Name"], info["Capacity"]);
 				cur.execute(query)
 				con.commit()
@@ -360,9 +360,9 @@ def passengerShip(con, cur):
 			try:
 				info = {}
 				info["ID"] = int(input("Ship_ID: "))
-				info["Capacity"] = float(input("Capacity (TEU) : "))
+				info["Capacity"] = float(input("Capacity (Passenger) : "))
 				info["Facilities"] = input("Facilities : ")
-				query = "INSERT INTO PassengerShip(Ship_ID, `Capacity(TEU)`, Facilities) VALUES('%d', '%f', '%s')" %(info["ID"], info["Capacity"], info["Facilities"]);
+				query = "INSERT INTO PassengerShip(Ship_ID, `Capacity(Passenger)`, Facilities) VALUES('%d', '%f', '%s')" %(info["ID"], info["Capacity"], info["Facilities"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -383,11 +383,11 @@ def passengerShip(con, cur):
 					row["Ship_ID"] = int(info["ID"])
 				info["Capacity"] = input("Capacity (TEU) : ")	
 				if info["Capacity"] != "":
-					row["Capacity(TEU)"] = float(info["Capacity"])
+					row["Capacity(Passenger)"] = float(info["Capacity"])
 				info["Facilities"] = input("Facilities : ")
 				if info["Facilities"] != "":
 					row["Facilities"] = info["Facilities"]
-				query = "UPDATE PassengerShip SET Ship_ID = '%d', `Capacity(TEU)` = '%f', Facilities = '%s' WHERE Ship_ID = '%d'" %(row["Ship_ID"], row["Capacity(TEU)"], row["Facilities"], ID);
+				query = "UPDATE PassengerShip SET Ship_ID = '%d', `Capacity(Passenger)` = '%f', Facilities = '%s' WHERE Ship_ID = '%d'" %(row["Ship_ID"], row["Capacity(Passenger)"], row["Facilities"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")
@@ -512,7 +512,7 @@ def route(con, cur):
 				info["ID"] = int(input("Ship_ID: "))
 				info["PID"] = int(input("Port_ID: "))
 				info["SNo"] = int(input("Stop Number : "))
-				info["ATime"] = input("Arrival Time (YYYY-MM-DD HH-MM-SS) : ")	
+				info["ATime"] = input("Arrival Time (YYYY-MM-DD HH-MM-SS) : ")
 				info["DTime"] = input("Departure Time (YYYY-MM-DD HH-MM-SS) : ")	
 				query = "INSERT INTO Route(Ship_ID, Port_ID, StopNumber, ArrivalTime, DepartureTime) VALUES('%d', '%d', '%d', '%s', '%s')" %(info["ID"], info["PID"], info["SNo"], info["ATime"], info["DTime"]);
 				cur.execute(query)
@@ -598,12 +598,14 @@ def ticket(con, cur):
 				info = {}
 				info["ID"] = int(input("Ticket_ID: "))
 				info["SID"] = int(input("Ship_ID: "))
-				info["PID"] = int(input("Port_ID: "))
+				info["PID"] = int(input("Source Port_ID: "))
+				info["DID"] = int(input("Destination Port_ID: "))
 				info["PsID"] = int(input("Passenger_ID: "))
 				info["AID"] = int(input("Agent_ID: "))
 				info["seat"] = int(input("Seat Number : "))
 				info["time"] = input("Departure Time (YYYY-M-DD HH-MM-SS) : ")
-				query = "INSERT INTO Ticket(Ticket_ID, Ship_ID, Port_ID, Passenger_ID, Agent_ID, SeatNo, DepartureTime) VALUES('%d', '%d', '%d', '%d', '%d', '%d', '%s')" %(info["ID"], info["SID"], info["PID"], info["PsID"], info["AID"], info["seat"], info["time"]);
+				info["Atime"] = input("Arrival Time (YYYY-M-DD HH-MM-SS) : ")
+				query = "INSERT INTO Ticket(Ticket_ID, Ship_ID, SourcePort_ID, DestinationPort_ID, Passenger_ID, Agent_ID, SeatNo, DepartureTime, ArrivalTime) VALUES('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%s')" %(info["ID"], info["SID"], info["PID"], info["DID"], info["PsID"], info["AID"], info["seat"], info["time"], info["Atime"]);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Added\n")
@@ -625,9 +627,12 @@ def ticket(con, cur):
 				info["SID"] = input("Ship_ID: ")
 				if info["SID"] != "":
 					row["Ship_ID"] = int(info["SID"])
-				info["PID"] = input("Port_ID: ")
+				info["PID"] = input("Source Port_ID: ")
 				if info["PID"] != "":
-					row["Port_ID"] = int(info["PID"])
+					row["SourcePort_ID"] = int(info["PID"])
+				info["DID"] = input("Destination Port_ID: ")
+				if info["DID"] != "":
+					row["DestinationPort_ID"] = int(info["DID"])
 				info["PsID"] = input("Passenger_ID: ")
 				if info["PsID"] != "":
 					row["Passenger_ID"] = int(info["PsID"])
@@ -639,8 +644,11 @@ def ticket(con, cur):
 					row["SeatNo"] = int(info["seat"])
 				info["time"] = input("Departure Time (YYYY-M-DD HH-MM-SS) : ")
 				if info["time"] != "":
-					row["DepartureTime"] = int(info["time"])
-				query = "UPDATE Ticket SET Ticket_ID = '%d', Ship_ID = '%d', Port_ID = '%d', Passenger_ID = '%d', Agent_ID = '%d', SeatNo = '%d', DepartureTime = '%s' WHERE Ticket_ID = '%d'" %(row["Ticket_ID"], row["Ship_ID"], row["Port_ID"], row["Passenger_ID"], row["Agent_ID"], row["SeatNo"], row["DepartureTime"], ID);
+					row["DepartureTime"] = info["time"]
+				info["Atime"] = input("Arrival Time (YYYY-M-DD HH-MM-SS) : ")
+				if info["Atime"] != "":
+					row["ArrivalTime"] = info["Atime"]
+				query = "UPDATE Ticket SET Ticket_ID = '%d', Ship_ID = '%d', SourcePort_ID = '%d', DestinationPortID = '%d', Passenger_ID = '%d', Agent_ID = '%d', SeatNo = '%d', DepartureTime = '%s', ArrivalTime = '%s' WHERE Ticket_ID = '%d'" %(row["Ticket_ID"], row["Ship_ID"], row["SourcePort_ID"], row["DestinationPort_ID"], row["Passenger_ID"], row["Agent_ID"], row["SeatNo"], row["DepartureTime"], row["ArrivalTime"], ID);
 				cur.execute(query)
 				con.commit()
 				print("Successfully Modified\n")
@@ -1682,3 +1690,89 @@ def stateCountry(con, cur):
 			return 1
 		else:
 			print("Please choose the correct option")
+
+
+def bookTicket(id, con, cur):
+	try:
+		source = int(input("Source: "))
+		destination = int(input("Destination: "))
+		pdate = input("Date (YYYY-MM-DD): ")
+		ndate = (datetime.datetime.strptime(pdate, '%Y-%m-%d').date()+datetime.timedelta(days = 1)).strftime('%Y-%m-%d')
+		pdate += " 00-00-00"
+		ndate += " 00-00-00"
+		query = "SELECT Port_ID, Ship_ID, CONVERT(DepartureTime, CHAR) AS Time FROM Route WHERE Port_ID = '%d' AND DepartureTime IS NOT NULL AND STRCMP(CONVERT(DepartureTime, CHAR), '%s') >= 0 AND STRCMP(CONVERT(DepartureTime, CHAR), '%s') < 0 ORDER BY Time AND Ship_ID" %(source, pdate, ndate);
+		cur.execute(query)
+		srow = cur.fetchall()
+		query = "SELECT Port_ID, Ship_ID, CONVERT(ArrivalTime, CHAR) AS Time FROM Route WHERE Port_ID = '%d' AND ArrivalTime IS NOT NULL AND STRCMP(CONVERT(ArrivalTime, CHAR), '%s') >= 0 ORDER BY Time AND Ship_ID" %(destination, pdate);
+		cur.execute(query)
+		drow = cur.fetchall()
+		if len(srow) == 0 or len(drow) == 0:
+			print("Ticket is not available for this route\n")
+			return
+		final=[]
+		i = 0
+		j = 0
+		while i < len(srow) and j < len(drow):
+			if srow[i]["Ship_ID"] > drow[j]["Ship_ID"]:
+				j += 1
+			elif srow[i]["Ship_ID"] < drow[j]["Ship_ID"]:
+				i += 1
+			else:
+				if srow[i]["Time"] < drow[j]["Time"]:
+					final.append({'Ship_ID':srow[i]["Ship_ID"], 'Source':source, 'Departure Time':srow[i]["Time"], 'Destination':destination, 'Arrival Time':drow[j]["Time"]})
+					i += 1
+					j += 1
+				else:
+					i += 1
+		if len(final) == 0:
+			print("Ticket is not available for this route\n")
+			return
+		else:
+			for i in range(len(final)):
+				print(str(i+1) + ". " + str(final[i]))
+		ch = int(input("Enter Ticket No. to buy or Press 0 to Go back : "))
+		if ch != 0:
+			ch -= 1
+			Agent = input("Enter Agent_ID to book Ticket: ")
+			query = "SELECT * FROM Ticket WHERE Ship_ID = '%d' ORDER BY SeatNo DESC" %(final[ch]["Ship_ID"]);
+			cur.execute(query)
+			seat = cur.fetchone()
+			if seat == None:
+				seat = 1
+			else:
+				seat = seat["SeatNo"] + 1
+			query = "INSERT INTO Ticket(Ship_ID, SourcePort_ID, DestinationPort_ID, DepartureTime, ArrivalTime, Passenger_ID, SeatNo, Agent_ID) VALUES('%d', '%d', '%d', '%s', '%s', '%d', '%d', '%s')" %(final[ch]["Ship_ID"], source, destination, final[ch]["Departure Time"], final[ch]["Arrival Time"], id, seat, Agent)
+			cur.execute(query)
+			con.commit()
+			query = "SELECT * FROM Ticket ORDER BY Ticket_ID DESC"
+			cur.execute(query)
+			print("Your Ticket_ID is " + str(cur.fetchone()["Ticket_ID"]) + "\n")
+	except Exception as er:
+		print(">>>>>>>", er)
+
+
+def shipStatus(con, cur):
+	try:
+		id = int(input("Enter Ship_ID: "))
+		pdate = input("Date (YYYY-MM-DD): ")
+		ndate = (datetime.datetime.strptime(pdate, '%Y-%m-%d').date()+datetime.timedelta(days = 1)).strftime('%Y-%m-%d')
+		pdate += " 00-00-00"
+		ndate += " 00-00-00"
+		query = "SELECT Port_ID, Ship_ID, StopNumber, CONVERT(ArrivalTime, CHAR) AS Arrival, CONVERT(DepartureTime, CHAR) AS Departure FROM Route WHERE Ship_ID = '%d' AND ((DepartureTime IS NOT NULL AND STRCMP(CONVERT(DepartureTime, CHAR), '%s') >= 0) OR (ArrivalTime IS NOT NULL AND STRCMP(CONVERT(ArrivalTime, CHAR), '%s') <= 0)) ORDER BY Departure AND StopNumber" %(id, pdate, ndate);
+		cur.execute(query)
+		rows = cur.fetchall()
+		for row in rows:
+			print(row)
+	except Exception as er:
+		print(">>>>>>>", er)
+
+
+def cargoTradeStatus(con, cur):
+	try:
+		query = "SELECT SUM(`Capacity(TEU)`), SUM(`Cost(Rupees per TEU)`), S.SourcePort_ID, S.DestinationPort_ID FROM Ship S INNER JOIN CargoShip C ON S.Ship_ID=C.Ship_ID GROUP BY S.SourcePort_ID, S.DestinationPort_ID;"
+		cur.execute(query)
+		rows = cur.fetchall()
+		for row in rows:
+			print(row)
+	except Exception as er:
+		print(">>>>>>>", er)

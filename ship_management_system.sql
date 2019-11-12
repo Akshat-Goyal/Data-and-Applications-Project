@@ -68,11 +68,11 @@ create table CargoShip(
 drop table if exists PassengerShip;
 create table PassengerShip(
     Ship_ID INT UNSIGNED NOT NULL,
-    `Capacity(TEU)` FLOAT NOT NULL,
+    `Capacity(Passenger)` INT UNSIGNED NOT NULL,
     Facilities VARCHAR(128),
     PRIMARY KEY (Ship_ID),
     FOREIGN KEY (Ship_ID) REFERENCES Ship(Ship_ID) ON DELETE CASCADE,
-    CONSTRAINT `Capacity(TEU)` CHECK(`Capacity(TEU)` > 0 AND `Capacity(TEU)` <= 21413),
+    CONSTRAINT `Capacity(Passenger)` CHECK(`Capacity(Passenger)` <= 500),
     CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5)
 );
 
@@ -87,8 +87,8 @@ create table BookingAgent(
 SET sql_mode = '';
 drop table if exists Route;
 create table Route(
-    ArrivalTime TIMESTAMP NOT NULL,
-    DepartureTime TIMESTAMP NOT NULL,
+    ArrivalTime TIMESTAMP,
+    DepartureTime TIMESTAMP,
     StopNumber INT UNSIGNED NOT NULL,
     Port_ID INT UNSIGNED NOT NULL,
     Ship_ID INT UNSIGNED NOT NULL,
@@ -103,19 +103,23 @@ drop table if exists Ticket;
 create table Ticket(
     Ticket_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
     Ship_ID INT UNSIGNED NOT NULL,
-    Port_ID INT UNSIGNED NOT NULL,
+    SourcePort_ID INT UNSIGNED NOT NULL,
+    DestinationPort_ID INT UNSIGNED NOT NULL,
+    ArrivalTime TIMESTAMP NOT NULL,
     DepartureTime TIMESTAMP NOT NULL,
     Passenger_ID INT UNSIGNED NOT NULL,
     SeatNo INT UNSIGNED NOT NULL,
     Agent_ID INT UNSIGNED NOT NULL,
     PRIMARY KEY (Ticket_ID),
     FOREIGN KEY (DepartureTime, Ship_Id) REFERENCES Route(DepartureTime, Ship_ID) ON DELETE CASCADE,
-    FOREIGN KEY (Port_Id) REFERENCES Port(Port_ID) ON DELETE CASCADE,
+    FOREIGN KEY (SourcePort_Id) REFERENCES Port(Port_ID) ON DELETE CASCADE,
+    FOREIGN KEY (DestinationPort_Id) REFERENCES Port(Port_ID) ON DELETE CASCADE,
     FOREIGN KEY (Passenger_Id) REFERENCES Passenger(Passenger_ID) ON DELETE CASCADE,
     FOREIGN KEY (Agent_Id) REFERENCES BookingAgent(Agent_ID) ON DELETE CASCADE,
     CONSTRAINT Ticket_ID CHECK(LENGTH(CONVERT(Ticket_ID, CHAR)) = 7),
     CONSTRAINT Ship_ID CHECK(LENGTH(CONVERT(Ship_ID, CHAR)) = 5),
-    CONSTRAINT Port_ID CHECK(LENGTH(CONVERT(Port_ID, CHAR)) = 5),
+    CONSTRAINT SourcePort_ID CHECK(LENGTH(CONVERT(SourcePort_ID, CHAR)) = 5),
+    CONSTRAINT DestinationPort_ID CHECK(LENGTH(CONVERT(DestinationPort_ID, CHAR)) = 5),
     CONSTRAINT Passenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7),
     CONSTRAINT Agent_ID CHECK(LENGTH(CONVERT(Agent_ID, CHAR)) = 7),
     CONSTRAINT SeatNo CHECK(SeatNo <= 2000)
@@ -213,7 +217,7 @@ create table Passenger_PhoneNumber(
     PhoneNumber VARCHAR(20) NOT NULL,
     PRIMARY KEY (PhoneNumber),
     FOREIGN KEY (Passenger_ID) REFERENCES Passenger(Passenger_ID) ON DELETE CASCADE,
-    CONSTRAINT PhoneNumber CHECK(PhoneNumber NOT LIKE '%[^0-9]%'),
+    CONSTRAINT PhoneNumber CHECK(LENGHT(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
     CONSTRAINT Passenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7)
 );
 
@@ -223,6 +227,7 @@ create table Passenger_EmailID(
     EmailID VARCHAR(320) NOT NULL,
     PRIMARY KEY (EmailID),
     FOREIGN KEY (Passenger_ID) REFERENCES Passenger(Passenger_ID) ON DELETE CASCADE,
+    CONSTRAINT EmailID CHECK(EmailID LIKE '_%[@]_%[.]_%')
     CONSTRAINT Passenger_ID CHECK(LENGTH(CONVERT(Passenger_ID, CHAR)) = 7)
 );
 
@@ -232,7 +237,7 @@ create table Employee_PhoneNumber(
     PhoneNumber VARCHAR(20) NOT NULL,
     PRIMARY KEY (PhoneNumber),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
-    CONSTRAINT PhoneNumber CHECK(PhoneNumber NOT LIKE '%[^0-9]%'),
+    CONSTRAINT PhoneNumber CHECK(LENGHT(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
     CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
 
@@ -242,6 +247,7 @@ create table Employee_EmailID(
     EmailID VARCHAR(320) NOT NULL,
     PRIMARY KEY (EmailID),
     FOREIGN KEY (Employee_ID) REFERENCES Employee(Employee_ID) ON DELETE CASCADE,
+    CONSTRAINT EmailID CHECK(EmailID LIKE '_%[@]_%[.]_%')
     CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
 
@@ -252,7 +258,7 @@ create table EmployeeDependent_PNo(
     PhoneNumber VARCHAR(20) NOT NULL,
     PRIMARY KEY (PhoneNumber),
     FOREIGN KEY (Employee_ID, DependentNo) REFERENCES Employee_Dependent(Employee_ID, DependentNo) ON DELETE CASCADE,
-    CONSTRAINT PhoneNumber CHECK(PhoneNumber NOT LIKE '%[^0-9]%'),
+    CONSTRAINT PhoneNumber CHECK(LENGHT(PhoneNumber) = 10 AND PhoneNumber NOT LIKE '%[^0-9]%'),
     CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );
 
@@ -263,5 +269,6 @@ create table EmployeeDependent_EmailID(
     EmailID VARCHAR(320) NOT NULL,
     PRIMARY KEY (EmailID),
     FOREIGN KEY (Employee_ID, DependentNo) REFERENCES Employee_Dependent(Employee_ID, DependentNo) ON DELETE CASCADE,
+    CONSTRAINT EmailID CHECK(EmailID LIKE '_%[@]_%[.]_%')
     CONSTRAINT Employee_ID CHECK(LENGTH(CONVERT(Employee_ID, CHAR)) = 7)
 );

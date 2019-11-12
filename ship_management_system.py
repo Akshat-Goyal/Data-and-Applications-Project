@@ -1,7 +1,8 @@
 import subprocess as sp
+import datetime
 import pymysql
 import pymysql.cursors
-from adminFunctions import *
+from functions import *
 
 
 def admin(con, cur):
@@ -22,14 +23,16 @@ def admin(con, cur):
 		print("12. Drivers Table")
 		print("13. Other Staff Table")
 		print("14. Employee Dependents Table")
-		print("15. Passenger PhoneNumber; Table")
+		print("15. Passenger PhoneNumber Table")
 		print("16. Passenger EmailID Table")
 		print("17. Employee PhoneNumber Table")
 		print("18. Employee EmailID Table")
 		print("19. Employee Dependent Phone No Table")
 		print("20. Employee Dependent EmailID Table")
 		print("21. State_Country Table")
-		print("22. Logout")
+		print("22. Check Ship Status")
+		print("23. Check Cargo Trade Report")
+		print("24. Logout")
 		ch = int(input("Enter choice> "))
 		tmp = sp.call('clear',shell=True)
 		if ch == 1:
@@ -75,22 +78,33 @@ def admin(con, cur):
 		elif ch == 21:
 			stateCountry(con, cur)
 		elif ch == 22:
+			shipStatus(con, cur)
+			input("Press ENTER to CONTINUE>")
+		elif ch == 23:
+			cargoTradeStatus(con, cur)
+			input("Press ENTER to CONTINUE>")
+		elif ch == 24:
 			return 1
 		else:
 			print("Please choose the correct option")
+ 
 
 def user(id, con, cur):
 	while(True):
 		print("Do you want to:")
 		print("1. Book Ticket")
-		print("2. Logout")
+		print("2. Check Ship Status")
+		print("3. Logout")
 		ch = int(input("Enter choice> "))
 		if ch == 1:
-			return 1
+			bookTicket(id, con, cur)
 		elif ch == 2:
-			return 1
+			shipStatus(con, cur)
+		elif ch == 3:
+			return
 		else:
 			print("Please choose the correct option")
+
 
 def login(con, cur):
 	try:
@@ -105,8 +119,10 @@ def login(con, cur):
 		tmp = sp.call('clear',shell=True)
 		print("You are logged in.\n")
 		user(info["ID"], con, cur)
+		print("Successfully logged out.\n")
 	except Exception as er:
 		print(er)
+
 
 def register(con, cur):
 	try:
@@ -158,13 +174,13 @@ if __name__ == '__main__':
 	run = 1
 	while(run):
 		tmp = sp.call('clear',shell=True)
-		# username = input("Username: ")
-		# password = input("Password: ")
+		username = input("Username: ")
+		password = input("Password: ")
 		
 		try:
 			con = pymysql.connect(host='localhost',
-					user='user',
-					password='password',
+					user=username,
+					password=password,
 					db='SHIP_MANAGEMENT_SYSTEM',
 					cursorclass=pymysql.cursors.DictCursor)
 			tmp = sp.call('clear',shell=True)
@@ -200,6 +216,8 @@ if __name__ == '__main__':
 								print("Successfully logged in.\n")
 								input("Press ENTER to CONTINUE>")
 								admin(con, cur)
+								print("Successfully logged out.\n")
+								input("Press ENTER to CONTINUE>")
 								break
 							else:
 								print("Wrong password. Do you want to:")

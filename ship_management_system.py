@@ -158,13 +158,13 @@ if __name__ == '__main__':
 	run = 1
 	while(run):
 		tmp = sp.call('clear',shell=True)
-		# username = input("Username: ")
-		# password = input("Password: ")
+		username = input("Username: ")
+		password = input("Password: ")
 		
 		try:
 			con = pymysql.connect(host='localhost',
-					user='user',
-					password='password',
+					user=username,
+					password=password,
 					db='SHIP_MANAGEMENT_SYSTEM',
 					cursorclass=pymysql.cursors.DictCursor)
 			tmp = sp.call('clear',shell=True)

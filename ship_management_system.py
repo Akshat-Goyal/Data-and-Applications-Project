@@ -113,7 +113,7 @@ def register(con, cur):
 		info = {}
 		info["ID"] = int(input("Passenger_ID: "))
 		query = "SELECT * FROM Passenger WHERE Passenger_ID = '%d'" %(info["ID"]);
-		cur.execute()
+		cur.execute(query)
 		row = cur.fetchone()
 		if row != None:
 			print("Passenger_ID already exists.")
@@ -158,13 +158,13 @@ if __name__ == '__main__':
 	run = 1
 	while(run):
 		tmp = sp.call('clear',shell=True)
-		username = input("Username: ")
-		password = input("Password: ")
+		# username = input("Username: ")
+		# password = input("Password: ")
 		
 		try:
 			con = pymysql.connect(host='localhost',
-					user=username,
-					password=password,
+					user='user',
+					password='password',
 					db='SHIP_MANAGEMENT_SYSTEM',
 					cursorclass=pymysql.cursors.DictCursor)
 			tmp = sp.call('clear',shell=True)

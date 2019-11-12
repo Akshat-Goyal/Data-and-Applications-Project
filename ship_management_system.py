@@ -6,6 +6,7 @@ from adminFunctions import *
 
 def admin(con, cur):
 	while(True):
+		tmp = sp.call('clear',shell=True)
 		print("Do you want to enter:")
 		print("1. Passenger Table")
 		print("2. Port Table")
@@ -196,7 +197,8 @@ if __name__ == '__main__':
 							tmp = input("Enter the password to CONTINUE> ")
 							sp.call('clear',shell=True)
 							if tmp == 'admin':
-								print("Successfully logged in\n.")
+								print("Successfully logged in.\n")
+								input("Press ENTER to CONTINUE>")
 								admin(con, cur)
 								break
 							else:

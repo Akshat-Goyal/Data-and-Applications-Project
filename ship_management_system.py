@@ -97,7 +97,7 @@ def login(con, cur):
 		info = {}
 		info["ID"] = int(input("Passenger_ID: "))
 		query = "SELECT * FROM Passenger WHERE Passenger_ID = '%d'" %(info["ID"]);
-		cur.execute()
+		cur.execute(query)
 		row = cur.fetchone()
 		if row == None:
 			print("You are not registered.")

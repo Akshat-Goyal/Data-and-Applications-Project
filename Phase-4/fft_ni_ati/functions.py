@@ -1700,10 +1700,10 @@ def bookTicket(id, con, cur):
 		ndate = (datetime.datetime.strptime(pdate, '%Y-%m-%d').date()+datetime.timedelta(days = 1)).strftime('%Y-%m-%d')
 		pdate += " 00-00-00"
 		ndate += " 00-00-00"
-		query = "SELECT Port_ID, Ship_ID, CONVERT(DepartureTime, CHAR) AS Time FROM Route WHERE Port_ID = '%d' AND DepartureTime IS NOT NULL AND STRCMP(CONVERT(DepartureTime, CHAR), '%s') >= 0 AND STRCMP(CONVERT(DepartureTime, CHAR), '%s') < 0 ORDER BY Time AND Ship_ID" %(source, pdate, ndate);
+		query = "SELECT Port_ID, Ship_ID, CONVERT(DepartureTime, CHAR) AS Time FROM Route WHERE Ship_ID IN (SELECT Ship_ID FROM PassengerShip) AND Port_ID = '%d' AND DepartureTime IS NOT NULL AND STRCMP(CONVERT(DepartureTime, CHAR), '%s') >= 0 AND STRCMP(CONVERT(DepartureTime, CHAR), '%s') < 0 ORDER BY Time AND Ship_ID" %(source, pdate, ndate);
 		cur.execute(query)
 		srow = cur.fetchall()
-		query = "SELECT Port_ID, Ship_ID, CONVERT(ArrivalTime, CHAR) AS Time FROM Route WHERE Port_ID = '%d' AND ArrivalTime IS NOT NULL AND STRCMP(CONVERT(ArrivalTime, CHAR), '%s') >= 0 ORDER BY Time AND Ship_ID" %(destination, pdate);
+		query = "SELECT Port_ID, Ship_ID, CONVERT(ArrivalTime, CHAR) AS Time FROM Route WHERE Ship_ID IN (SELECT Ship_ID FROM PassengerShip) AND Port_ID = '%d' AND ArrivalTime IS NOT NULL AND STRCMP(CONVERT(ArrivalTime, CHAR), '%s') >= 0 ORDER BY Time AND Ship_ID" %(destination, pdate);
 		cur.execute(query)
 		drow = cur.fetchall()
 		if len(srow) == 0 or len(drow) == 0:
